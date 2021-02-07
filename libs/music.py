@@ -2,6 +2,8 @@ import json
 import os
 from log import Logging
 import requests
+import eyed3
+# import shutil
 
 
 def make_name_normal(a):
@@ -51,7 +53,7 @@ def get_songs_info(user):
                     counter, len(songs)), user.logfile)
         if bad_songs:
             f.write("\nCan't write songs(bad name decoding): " + str(bad_songs))
-    Logging('Song info received', user.logfile)
+    Logging('Songs info received', user.logfile)
 
 
 def download_song(infofile_name, user, path='.'):
@@ -60,11 +62,28 @@ def download_song(infofile_name, user, path='.'):
         infofile_name), user.logfile)
     with open('./data/Normal_Songs/{0}.json'.format(infofile_name), 'r') as info:
         song = json.load(info)
-    Logging('Start download', user.logfile)
+    Logging('Start download: "{0}"'.format(infofile_name), user.logfile)
     r = requests.get(song["url"])
     if not os.path.exists(path + '/downloads'):
         os.mkdir(path + '/downloads')
     if r.status_code == 200:
         with open(path + '/downloads/{0} - {1}.mp3'.format(song["artist"], song["title"]), 'wb') as song_mp3:
             song_mp3.write(r.content)
-            Logging('Download complete successfull', user.logfile)
+            Logging('Download complete successfull. Starting description changing', user.logfile)
+            set_song_info(infofile_name, user, path)
+
+
+def set_song_info(file_name, user, path='.'):
+    try:
+        song = eyed3.load(path + '/downloads/' + file_name + '.mp3')
+        song_artist, song_title = file_name.split(' - ')
+        song.tag.artist = song_artist
+        # song.tag.album = "Free For All Comp LP"
+        if song.tag.album_artist is None:
+            song.tag.album_artist = song_artist
+        song.tag.title = song_title
+        # song.tag.track_num = 3
+        song.tag.save()
+        Logging('Complete changing of description of song: "{0}"'.format(file_name), user.logfile)
+    except Exception as err:
+        Logging("[ERROR] (Can't change song description) " + str(err), user.logfile)
