@@ -3,7 +3,6 @@ import os
 from log import Logging
 import requests
 import eyed3
-# import shutil
 
 
 def make_name_normal(a):
@@ -16,7 +15,7 @@ def make_name_normal(a):
 def get_songs_info(user):
     '''
     This function get all info about user music
-    It put these into JSON-files (data files)
+    It put its into JSON-files (data files)
     If song has bad decoding name or author (not-unicode), its put
     it in folder "Bad_Songs" with song ID as name
     Else its put it in folder "Normal_Songs" (Name = 'Author' - 'Title')
