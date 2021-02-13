@@ -20,9 +20,9 @@ def get_songs_info(user):
     it in folder "Bad_Songs" with song ID as name
     Else its put it in folder "Normal_Songs" (Name = 'Author' - 'Title')
     '''
-    if not os.path.exists('./data'):
-        os.mkdir('./data')
-    with open('./data/vk_audio_list.txt', 'w') as f:
+    if not os.path.exists('./data/{0}'.format(user.user_id)):
+        os.makedirs('./data/{0}'.format(user.user_id))
+    with open('./data/{0}/vk_audio_list.txt'.format(user.user_id), 'w') as f:
         bad_songs = 0
         Logging(
             'Looking for a user songs. It may take time if you have a lot of music', user.logfile)
@@ -34,19 +34,19 @@ def get_songs_info(user):
             counter += 1
             try:
                 f.write(i["artist"] + ' - ' + i["title"] + '\n')
-                if not os.path.exists('./data/Normal_Songs'):
-                    os.mkdir('./data/Normal_Songs')
+                if not os.path.exists('./data/{0}/Normal_Songs'.format(user.user_id)):
+                    os.makedirs('./data/{0}/Normal_Songs'.format(user.user_id))
                 normal_song = make_name_normal(
                     str(i['artist'] + ' - ' + i['title']))
-                with open('./data/Normal_Songs/' + normal_song + '.json', 'w') as good_file:
+                with open('./data/{0}/Normal_Songs/'.format(user.user_id) + normal_song + '.json', 'w') as good_file:
                     json.dump(i, good_file, indent=2, ensure_ascii=False)
                 Logging('Get info about {0}/{1} songs. Current song: "{2} - {3}"'.format(
                     counter, len(songs), i["artist"], i["title"]), user.logfile)
             except UnicodeEncodeError:
                 bad_songs += 1
-                if not os.path.exists('./data/Broken_Songs'):
-                    os.mkdir('./data/Broken_Songs')
-                with open('./data/Broken_Songs/' + str(i['id']) + '.json', 'w') as bad_file:
+                if not os.path.exists('./data/{0}/Broken_Songs'.format(user.user_id)):
+                    os.makedirs('./data/{0}/Broken_Songs'.format(user.user_id))
+                with open('./data/{0}/Broken_Songs/'.format(user.user_id) + str(i['id']) + '.json', 'w') as bad_file:
                     json.dump(i, bad_file, indent=2, ensure_ascii=True)
                 Logging('[WARNING]Get info about {0}/{1} songs. Bad decoding name error'.format(
                     counter, len(songs)), user.logfile)
@@ -59,7 +59,7 @@ def download_song(infofile_name, user, path='.'):
     # function to download song by filename (data file), user (session) and path (song will save in this place)
     Logging('Try to download song: "{0}". Getting url'.format(
         infofile_name), user.logfile)
-    with open('./data/Normal_Songs/{0}.json'.format(infofile_name), 'r') as info:
+    with open('./data/{0}/Normal_Songs/{1}.json'.format(user.user_id, infofile_name), 'r') as info:
         song = json.load(info)
     Logging('Start download: "{0}"'.format(infofile_name), user.logfile)
     r = requests.get(song["url"])

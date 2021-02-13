@@ -14,9 +14,6 @@ class Root(QMainWindow):
     def __init__(self, user, parent=None):
         super().__init__(parent)
 
-        os.chdir('..')
-        os.chdir('..')
-
         self.path = '.'
         self.user = user
 
@@ -71,13 +68,10 @@ class Root(QMainWindow):
             music.download_song(i, self.user, self.path)
 
     def download_all(self):
-        dirr = './data/Normal_Songs'
+        dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
         files = os.listdir(dirr)
-        count = 0
         for i in files:
             music.download_song(i[:-5], self.user, self.path)
-            count += 1
-            print(count)
 
     def deselect(self):
         for i in range(self.music.count()):
@@ -90,7 +84,7 @@ class Root(QMainWindow):
     #         self.console.setPlainText(cur)
 
     def get_all_songs(self):
-        dirr = './data/Normal_Songs'
+        dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
         files = os.listdir(dirr)
         for i in files:
             with open(dirr + '/' + i, 'r') as f:
@@ -111,9 +105,9 @@ class Root(QMainWindow):
         elif song in self.to_download:
             self.to_download.remove(song)
 
-user = auth.auth('qw', 'qw')
-app = QApplication(sys.argv)
-ex = Root(user)
-ex.get_all_songs()
-ex.show()
-sys.exit(app.exec_())
+# user = auth.auth('qw', 'qw')
+# app = QApplication(sys.argv)
+# ex = Root(user)
+# ex.get_all_songs()
+# ex.show()
+# sys.exit(app.exec_())

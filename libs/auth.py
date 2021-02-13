@@ -1,17 +1,42 @@
+import sys
+import os
 import vk_api
 from vk_api import audio
 from log import Logging, clear_last_log
 import log
 import json
+from time import sleep
+sys.path.insert(0, "./gui")
+# import captcha
+# import two_fact
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
 
 
 def captcha_handler(captcha):
     key = input("Enter captcha code {0}: ".format(captcha.get_url())).strip()
+    # app = QApplication(sys.argv)
+    # ui = captcha.Captcha(captcha)
+    # ui.show()
+    # ui.send()
+    # sys.exit(app.exec_())
+    # # if not os.path.exists('temp.txt'):
+    # #     sleep(1)
+    # with open('temp.txt', 'r') as f:
+    #     key = f.read().strip()
     return(captcha.try_again(key))
 
 
 def two_factor_auth_handler():
     key = input("Enter authentication code: ")
+    # app = QApplication(sys.argv)
+    # ui = two_fact.Two_fact()
+    # ui.show()
+    # while not os.path.exists('temp.txt'):
+    #     sleep(1)
+    # with open('temp.txt', 'r') as f:
+    #     key = f.read().strip()
     remember_device = True
     return(key, remember_device)
 
