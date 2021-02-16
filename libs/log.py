@@ -1,15 +1,5 @@
-import time
 import os
-
-
-def get_formated_date():  # Get date for logging
-    cur_date = time.strftime('%Y-%b-%d', time.localtime())
-    return cur_date
-
-
-def get_formated_time():  # Get time for logging
-    cur_time = time.strftime('%X', time.localtime())
-    return cur_time
+import tools
 
 
 def clear_last_log():  # Clear content of file "last_log.txt"
@@ -28,8 +18,8 @@ def Logging(text, file):
         if not os.path.exists("./log"):
             os.mkdir("log")
         with open("log/" + file, 'a') as f:
-            f.write('[{0}][{1}]'.format(get_formated_date(),
-                                        get_formated_time()) + text + '\n')
+            f.write('[{0}][{1}]'.format(tools.get_formated_date(),
+                                        tools.get_formated_time()) + text + '\n')
         if file != 'last_log.txt':
             Logging_last_log(text)
     except Exception:

@@ -3,13 +3,7 @@ import os
 from log import Logging
 import requests
 import eyed3
-
-
-def make_name_normal(a):
-    # Cuts illegal chars from name
-    bad_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|']
-    a = ''.join(i for i in a if not i in bad_chars)
-    return a
+from tools import make_name_normal
 
 
 def get_songs_info(user):

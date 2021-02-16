@@ -25,6 +25,8 @@ class Root(QMainWindow):
         self.music = QListWidget(self)
         self.music.itemActivated.connect(self.change)
 
+        self.progress = QProgressBar()
+
         openDirButton = QPushButton("Open")
         openDirButton.clicked.connect(self.getDirectory)
 
@@ -45,6 +47,7 @@ class Root(QMainWindow):
 
         layoutV2 = QVBoxLayout()
         layoutV2.addWidget(self.music)
+        layoutV2.addWidget(self.progress)
         # layoutV2.addWidget(self.console)
 
         layoutH = QHBoxLayout()
@@ -64,14 +67,26 @@ class Root(QMainWindow):
         self.path = dirlist
 
     def download(self):
+        counter = 0
+        max_counter = len(self.to_download)
+        self.progress.setMaximum(max_counter)
         for i in self.to_download:
             music.download_song(i, self.user, self.path)
+            counter += 1
+            self.progress.setValue(counter)
+        self.progress.reset()
 
     def download_all(self):
         dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
         files = os.listdir(dirr)
+        counter = 0
+        max_counter = len(files)
+        self.progress.setMaximum(max_counter)
         for i in files:
             music.download_song(i[:-5], self.user, self.path)
+            counter += 1
+            self.progress.setValue(counter)
+        self.progress.reset()
 
     def deselect(self):
         for i in range(self.music.count()):

@@ -3,15 +3,15 @@ import os
 import vk_api
 from vk_api import audio
 from log import Logging, clear_last_log
-import log
+import tools
 import json
-from time import sleep
+# from time import sleep
 sys.path.insert(0, "./gui")
 # import captcha
 # import two_fact
-from PyQt5.QtGui import *
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+# from PyQt5.QtGui import *
+# from PyQt5.QtCore import *
+# from PyQt5.QtWidgets import *
 
 
 def captcha_handler(captcha):
@@ -49,14 +49,20 @@ class auth():
     logfile = 'last_log.txt'
     user_id = 0
 
-    def __init__(self, login, password):
-        self.login = str(login)
-        self.password = str(password)
+    def __init__(self, login, password, relog):
+        if os.path.exists('user.json') and relog is True:
+            with open('user.json', 'r') as f:
+                user_data = json.load(f)
+                self.login = user_data['login']
+                self.password = tools.decode(user_data['password'])
+        else:
+            self.login = str(login)
+            self.password = str(password)
 
     def set_logfile_name(self):
         self.logfile = 'log-{0}--{1}.txt'.format(
-            log.get_formated_date(),
-            log.get_formated_time().replace(':', '-')
+            tools.get_formated_date(),
+            tools.get_formated_time().replace(':', '-')
         )
         return(self)
 
@@ -90,4 +96,7 @@ class auth():
         self.music = audio.VkAudio(self.session)
         Logging("Complete successfully", self.logfile)
         self.get_id()
+        with open('user.json', 'w') as f:
+            user_data = {'login': self.login, 'password': tools.encode(self.password)}
+            json.dump(user_data, f, indent=2, ensure_ascii=False)
         return(self)

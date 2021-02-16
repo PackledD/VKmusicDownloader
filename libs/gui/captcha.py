@@ -2,6 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from urllib.request import urlopen
+import sys
 
 
 class Captcha(QMainWindow):

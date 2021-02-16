@@ -70,7 +70,7 @@ class Log_root(QMainWindow):
         login = self.inputLogin.text()
         password = self.inputPassword.text()
         try:
-            self.user = auth.auth(login, password)
+            self.user = auth.auth(login, password, True)
             self.user.session_start()
             self.mainroot = mainroot.Root(self.user)
             music.get_songs_info(self.user)
