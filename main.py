@@ -2,10 +2,10 @@ import sys
 sys.path.insert(0, "./libs")
 sys.path.insert(1, "./libs/gui")
 import login
-# import auth
-# import music
 from log import Logging
 from PyQt5.QtWidgets import *
+from logging import getLogger
+getLogger().setLevel('ERROR')
 
 try:
     app = QApplication(sys.argv)

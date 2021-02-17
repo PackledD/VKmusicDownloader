@@ -1,11 +1,15 @@
 import sys
+import os
 sys.path.insert(0, "..")
 import auth
 import music
 import mainroot
+from log import Logging
+from time import sleep
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+import threading
 
 
 class Log_root(QMainWindow):
@@ -73,9 +77,14 @@ class Log_root(QMainWindow):
             self.user = auth.auth(login, password, True)
             self.user.session_start()
             self.mainroot = mainroot.Root(self.user)
+            # threading.Thread(lambda: music.get_songs_info(self.user))
+            # while not os.path.exists('./data/{0}'.format(self.user.user_id)):
+            #     sleep(5)
             music.get_songs_info(self.user)
+            Logging('Load main GUI', self.user.logfile)
             self.mainroot.show()
             self.mainroot.get_all_songs()
+            Logging('Main file loading complete', self.user.logfile)
             self.close()
         except Exception as err:
             self.errors.setText(str(err))

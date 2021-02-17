@@ -54,7 +54,8 @@ class auth():
             with open('user.json', 'r') as f:
                 user_data = json.load(f)
                 self.login = user_data['login']
-                self.password = tools.decode(user_data['password'])
+                # self.password = tools.decode(user_data['password'])
+                self.password = user_data['password']
         else:
             self.login = str(login)
             self.password = str(password)
@@ -97,6 +98,8 @@ class auth():
         Logging("Complete successfully", self.logfile)
         self.get_id()
         with open('user.json', 'w') as f:
-            user_data = {'login': self.login, 'password': tools.encode(self.password)}
+            # user_data = {'login': self.login, 'password': tools.encode(self.password)}
+            user_data = {'login': self.login, 'password': self.password}
+            # print(user_data)
             json.dump(user_data, f, indent=2, ensure_ascii=False)
         return(self)

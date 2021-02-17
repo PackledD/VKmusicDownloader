@@ -4,9 +4,11 @@ import music
 import auth
 import os
 import json
+from log import Logging
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+import threading
 
 
 class Root(QMainWindow):
@@ -24,17 +26,17 @@ class Root(QMainWindow):
         self.to_download = []
         self.music = QListWidget(self)
         self.music.itemActivated.connect(self.change)
-
+        
         self.progress = QProgressBar()
 
         openDirButton = QPushButton("Open")
         openDirButton.clicked.connect(self.getDirectory)
 
         saveOneButton = QPushButton("Save")
-        saveOneButton.clicked.connect(self.download)
+        saveOneButton.clicked.connect(lambda: threading.Thread(target=self.download).start())
 
-        saveAllButton = QPushButton("Save all")
-        saveAllButton.clicked.connect(self.download_all)
+        selectAllButton = QPushButton("Select all")
+        selectAllButton.clicked.connect(lambda: threading.Thread(target=self.select_all).start())
 
         removeSelButton = QPushButton("Remove selection")
         removeSelButton.clicked.connect(self.deselect)
@@ -42,7 +44,7 @@ class Root(QMainWindow):
         layoutV1 = QVBoxLayout()
         layoutV1.addWidget(openDirButton)
         layoutV1.addWidget(saveOneButton)
-        layoutV1.addWidget(saveAllButton)
+        layoutV1.addWidget(selectAllButton)
         layoutV1.addWidget(removeSelButton)
 
         layoutV2 = QVBoxLayout()
@@ -68,25 +70,34 @@ class Root(QMainWindow):
 
     def download(self):
         counter = 0
+        counter_broak = 0
         max_counter = len(self.to_download)
+        self.progress.setMinimum(counter)
         self.progress.setMaximum(max_counter)
         for i in self.to_download:
-            music.download_song(i, self.user, self.path)
-            counter += 1
+            try:
+                music.download_song(i, self.user, self.path)
+                counter += 1
+            except OSError:
+                Logging("Can't download song: {0}".format(i[:-5:]), self.user.logfile)
+                counter_broak += 1
             self.progress.setValue(counter)
         self.progress.reset()
+        text_info = '''Complete downloading. Total: {0}. Successful: {1}. Broak: {2}'''.format(
+            max_counter, counter, counter_broak)
+        Logging(text_info, self.user.logfile)
+        # qw = QMessageBox(self)
+        # qw.setWindowTitle('Info')
+        # qw.setText(text_info)
+        # qw.setIcon(QMessageBox.Information)
+        # qw.setStandardButtons(QMessageBox.Ok)
+        # qw.show()
+        self.deselect()
 
-    def download_all(self):
-        dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
-        files = os.listdir(dirr)
-        counter = 0
-        max_counter = len(files)
-        self.progress.setMaximum(max_counter)
-        for i in files:
-            music.download_song(i[:-5], self.user, self.path)
-            counter += 1
-            self.progress.setValue(counter)
-        self.progress.reset()
+    def select_all(self):
+        for i in range(self.music.count()):
+            item = self.music.item(i)
+            self.music.itemWidget(item).setCheckState(2)
 
     def deselect(self):
         for i in range(self.music.count()):
@@ -120,8 +131,9 @@ class Root(QMainWindow):
         elif song in self.to_download:
             self.to_download.remove(song)
 
-# user = auth.auth('qw', 'qw')
+# user = auth.auth('qw', 'qw', False)
 # app = QApplication(sys.argv)
+# app.setQuitOnLastWindowClosed(True)
 # ex = Root(user)
 # ex.get_all_songs()
 # ex.show()

@@ -10,7 +10,7 @@ def get_songs_info(user):
     '''
     This function get all info about user music
     It put its into JSON-files (data files)
-    If song has bad decoding name or author (not-unicode), its put
+    If song has bad-decoding name or author (not-unicode), its put
     it in folder "Bad_Songs" with song ID as name
     Else its put it in folder "Normal_Songs" (Name = 'Author' - 'Title')
     '''
