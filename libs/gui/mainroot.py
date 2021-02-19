@@ -26,7 +26,7 @@ class Root(QMainWindow):
         self.to_download = []
         self.music = QListWidget(self)
         self.music.itemActivated.connect(self.change)
-        
+
         self.progress = QProgressBar()
 
         openDirButton = QPushButton("Open")
@@ -41,11 +41,15 @@ class Root(QMainWindow):
         removeSelButton = QPushButton("Remove selection")
         removeSelButton.clicked.connect(self.deselect)
 
+        reloadMusic = QPushButton("Reload music")
+        reloadMusic.clicked.connect(self.reload_music)
+
         layoutV1 = QVBoxLayout()
         layoutV1.addWidget(openDirButton)
         layoutV1.addWidget(saveOneButton)
         layoutV1.addWidget(selectAllButton)
         layoutV1.addWidget(removeSelButton)
+        layoutV1.addWidget(reloadMusic)
 
         layoutV2 = QVBoxLayout()
         layoutV2.addWidget(self.music)
@@ -63,6 +67,13 @@ class Root(QMainWindow):
 
         self.resize(900, 640)
         self.setWindowTitle("VK music downloader")
+
+    def reload_music(self):
+        self.to_download = []
+        self.music = QListWidget(self)
+        self.music.itemActivated.connect(self.change)
+        music.get_songs_info(self.user)
+        self.get_all_songs()
 
     def getDirectory(self):
         dirlist = QFileDialog.getExistingDirectory(self, "Выбрать папку", ".")

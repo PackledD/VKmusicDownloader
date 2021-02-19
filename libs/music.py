@@ -18,8 +18,7 @@ def get_songs_info(user):
         os.makedirs('./data/{0}'.format(user.user_id))
     with open('./data/{0}/vk_audio_list.txt'.format(user.user_id), 'w') as f:
         bad_songs = 0
-        Logging(
-            'Looking for a user songs. It may take time if you have a lot of music', user.logfile)
+        Logging('Looking for a user songs. It may take time if you have a lot of music', user.logfile)
         songs = user.music.get(owner_id=user.user_id)
         Logging('Find {0} songs. Trying get info about it'.format(
             len(songs)), user.logfile)

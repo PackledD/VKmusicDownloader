@@ -76,12 +76,11 @@ class Log_root(QMainWindow):
         try:
             self.user = auth.auth(login, password, True)
             self.user.session_start()
-            self.mainroot = mainroot.Root(self.user)
-            # threading.Thread(lambda: music.get_songs_info(self.user))
-            # while not os.path.exists('./data/{0}'.format(self.user.user_id)):
-            #     sleep(5)
-            music.get_songs_info(self.user)
+            # thread = threading.Thread(target=lambda: music.get_songs_info(self.user))
+            # thread.start()
+            # thread.join()
             Logging('Load main GUI', self.user.logfile)
+            self.mainroot = mainroot.Root(self.user)
             self.mainroot.show()
             self.mainroot.get_all_songs()
             Logging('Main file loading complete', self.user.logfile)
