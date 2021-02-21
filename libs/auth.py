@@ -5,7 +5,7 @@ from vk_api import audio
 from log import Logging, clear_last_log
 import tools
 import json
-# from time import sleep
+# import threading
 sys.path.insert(0, "./gui")
 # import captcha
 # import two_fact
@@ -14,30 +14,45 @@ sys.path.insert(0, "./gui")
 # from PyQt5.QtWidgets import *
 
 
+# def captcha_thread(cap):
+#     # app = QApplication(sys.argv)
+#     ui = captcha.Captcha(cap)
+#     ui.show()
+#     # sys.exit(app.exec_())
+
+
+# def two_fact_thread():
+#     # app = QApplication(sys.argv)
+#     ui = two_fact.Two_fact()
+#     ui.show()
+#     # sys.exit(app.exec_())
+
+
 def captcha_handler(captcha):
     key = input("Enter captcha code {0}: ".format(captcha.get_url())).strip()
-    # app = QApplication(sys.argv)
-    # ui = captcha.Captcha(captcha)
-    # ui.show()
-    # ui.send()
-    # sys.exit(app.exec_())
-    # # if not os.path.exists('temp.txt'):
-    # #     sleep(1)
-    # with open('temp.txt', 'r') as f:
+    # thread = threading.Thread(captcha_thread(captcha))
+    # thread.start()
+    # thread.join()
+    # with open('temp.tmp', 'r') as f:
     #     key = f.read().strip()
+    # if os.path.isfile('./temp.tmp'):
+    #     os.remove('temp.tmp')
     return(captcha.try_again(key))
 
 
 def two_factor_auth_handler():
     key = input("Enter authentication code: ")
-    # app = QApplication(sys.argv)
-    # ui = two_fact.Two_fact()
-    # ui.show()
-    # while not os.path.exists('temp.txt'):
-    #     sleep(1)
-    # with open('temp.txt', 'r') as f:
-    #     key = f.read().strip()
-    remember_device = True
+    # thread = threading.Thread(two_fact_thread())
+    # thread.start()
+    # thread.join()
+    # with open('temp.tmp', 'r') as f:
+    #     key = f.readline().strip()
+    #     remember_device = bool(f.readline().strip())
+    # if os.path.isfile('./temp.tmp'):
+    #     os.remove('temp.tmp')
+    remember_device = False
+    if input("Do you want to remember your data on this device? (Y = yes, N = no)") == 'Y':
+        remember_device = True
     return(key, remember_device)
 
 
@@ -54,8 +69,7 @@ class auth():
             with open('user.json', 'r') as f:
                 user_data = json.load(f)
                 self.login = user_data['login']
-                # self.password = tools.decode(user_data['password'])
-                self.password = user_data['password']
+                self.password = tools.decode(user_data['password'])
         else:
             self.login = str(login)
             self.password = str(password)
@@ -98,8 +112,6 @@ class auth():
         Logging("Complete successfully", self.logfile)
         self.get_id()
         with open('user.json', 'w') as f:
-            # user_data = {'login': self.login, 'password': tools.encode(self.password)}
-            user_data = {'login': self.login, 'password': self.password}
-            # print(user_data)
+            user_data = {'login': self.login, 'password': tools.encode(self.password)}
             json.dump(user_data, f, indent=2, ensure_ascii=False)
         return(self)

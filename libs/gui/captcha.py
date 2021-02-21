@@ -49,6 +49,6 @@ class Captcha(QMainWindow):
         self.setCentralWidget(centerWidget)
 
     def send(self):
-        with open('temp.txt', 'w') as f:
+        with open('temp.tmp', 'w') as f:
             f.write(self.input.text())
         self.close()

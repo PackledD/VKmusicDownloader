@@ -36,7 +36,8 @@ class Root(QMainWindow):
         saveOneButton.clicked.connect(lambda: threading.Thread(target=self.download).start())
 
         selectAllButton = QPushButton("Select all")
-        selectAllButton.clicked.connect(lambda: threading.Thread(target=self.select_all).start())
+        # selectAllButton.clicked.connect(lambda: threading.Thread(target=self.select_all).start())
+        selectAllButton.clicked.connect(self.select_all)
 
         removeSelButton = QPushButton("Remove selection")
         removeSelButton.clicked.connect(self.deselect)
@@ -69,9 +70,8 @@ class Root(QMainWindow):
         self.setWindowTitle("VK music downloader")
 
     def reload_music(self):
-        self.to_download = []
-        self.music = QListWidget(self)
-        self.music.itemActivated.connect(self.change)
+        self.to_download.clear()
+        self.music.clear()
         music.get_songs_info(self.user)
         self.get_all_songs()
 
@@ -103,7 +103,7 @@ class Root(QMainWindow):
         # qw.setIcon(QMessageBox.Information)
         # qw.setStandardButtons(QMessageBox.Ok)
         # qw.show()
-        self.deselect()
+        # self.deselect()  # crash!!!
 
     def select_all(self):
         for i in range(self.music.count()):
@@ -141,11 +141,3 @@ class Root(QMainWindow):
             self.to_download.append(song)
         elif song in self.to_download:
             self.to_download.remove(song)
-
-# user = auth.auth('qw', 'qw', False)
-# app = QApplication(sys.argv)
-# app.setQuitOnLastWindowClosed(True)
-# ex = Root(user)
-# ex.get_all_songs()
-# ex.show()
-# sys.exit(app.exec_())

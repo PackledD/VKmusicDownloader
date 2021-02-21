@@ -5,7 +5,6 @@ import auth
 import music
 import mainroot
 from log import Logging
-from time import sleep
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
@@ -19,8 +18,6 @@ class Log_root(QMainWindow):
 
         self.setWindowTitle("Login")
         self.resize(333, 207)
-
-        # self.console = None
 
         label_log = QLabel("Login: ")
         label_log.setAlignment(Qt.AlignRight)
@@ -48,6 +45,7 @@ class Log_root(QMainWindow):
         self.inputPassword = QLineEdit()
         self.inputPassword.setMinimumSize(QSize(150, 20))
         self.inputPassword.setMaximumSize(QSize(150, 20))
+        self.inputPassword.setEchoMode(QLineEdit.Password)
 
         layoutH1 = QHBoxLayout()
         layoutH1.addWidget(label_log)
