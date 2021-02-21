@@ -5,7 +5,7 @@ from vk_api import audio
 from log import Logging, clear_last_log
 import tools
 import json
-# import threading
+import threading
 sys.path.insert(0, "./gui")
 # import captcha
 # import two_fact
@@ -14,42 +14,13 @@ sys.path.insert(0, "./gui")
 # from PyQt5.QtWidgets import *
 
 
-# def captcha_thread(cap):
-#     # app = QApplication(sys.argv)
-#     ui = captcha.Captcha(cap)
-#     ui.show()
-#     # sys.exit(app.exec_())
-
-
-# def two_fact_thread():
-#     # app = QApplication(sys.argv)
-#     ui = two_fact.Two_fact()
-#     ui.show()
-#     # sys.exit(app.exec_())
-
-
 def captcha_handler(captcha):
     key = input("Enter captcha code {0}: ".format(captcha.get_url())).strip()
-    # thread = threading.Thread(captcha_thread(captcha))
-    # thread.start()
-    # thread.join()
-    # with open('temp.tmp', 'r') as f:
-    #     key = f.read().strip()
-    # if os.path.isfile('./temp.tmp'):
-    #     os.remove('temp.tmp')
     return(captcha.try_again(key))
 
 
 def two_factor_auth_handler():
     key = input("Enter authentication code: ")
-    # thread = threading.Thread(two_fact_thread())
-    # thread.start()
-    # thread.join()
-    # with open('temp.tmp', 'r') as f:
-    #     key = f.readline().strip()
-    #     remember_device = bool(f.readline().strip())
-    # if os.path.isfile('./temp.tmp'):
-    #     os.remove('temp.tmp')
     remember_device = False
     if input("Do you want to remember your data on this device? (Y = yes, N = no)") == 'Y':
         remember_device = True

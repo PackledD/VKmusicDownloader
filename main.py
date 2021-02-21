@@ -4,8 +4,10 @@ sys.path.insert(1, "./libs/gui")
 import login
 from log import Logging
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import pyqtRemoveInputHook
 from logging import getLogger
 getLogger().setLevel('ERROR')
+pyqtRemoveInputHook()
 
 try:
     app = QApplication(sys.argv)

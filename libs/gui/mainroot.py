@@ -121,8 +121,11 @@ class Root(QMainWindow):
     #         self.console.setPlainText(cur)
 
     def get_all_songs(self):
-        dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
-        files = os.listdir(dirr)
+        try:
+            dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
+            files = os.listdir(dirr)
+        except OSError:
+            files = []
         for i in files:
             with open(dirr + '/' + i, 'r') as f:
                 cur_song = json.load(f)

@@ -8,7 +8,7 @@ from log import Logging
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-import threading
+# import threading
 
 
 class Log_root(QMainWindow):
@@ -74,9 +74,6 @@ class Log_root(QMainWindow):
         try:
             self.user = auth.auth(login, password, True)
             self.user.session_start()
-            # thread = threading.Thread(target=lambda: music.get_songs_info(self.user))
-            # thread.start()
-            # thread.join()
             Logging('Load main GUI', self.user.logfile)
             self.mainroot = mainroot.Root(self.user)
             self.mainroot.show()
