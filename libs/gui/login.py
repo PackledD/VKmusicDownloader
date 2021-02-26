@@ -8,6 +8,7 @@ from log import Logging
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from tools import resource_path
 # import threading
 
 
@@ -18,6 +19,7 @@ class Log_root(QMainWindow):
 
         self.setWindowTitle("Login")
         self.resize(333, 207)
+        self.setWindowIcon(QIcon(resource_path('logo.png')))
 
         label_log = QLabel("Login: ")
         label_log.setAlignment(Qt.AlignRight)

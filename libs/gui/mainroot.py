@@ -9,6 +9,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import threading
+from tools import resource_path
 
 
 class Root(QMainWindow):
@@ -16,18 +17,21 @@ class Root(QMainWindow):
     def __init__(self, user, parent=None):
         super().__init__(parent)
 
+        self.resize(900, 640)
+        self.setWindowTitle("VK music downloader")
+        self.setWindowIcon(QIcon(resource_path('logo.png')))
+
         self.path = '.'
         self.user = user
-
-        # self.console = QPlainTextEdit()
-        # self.console.setReadOnly(True)
-        # self.console.setFont(QFont('Arial', 11))
 
         self.to_download = []
         self.music = QListWidget(self)
         self.music.itemActivated.connect(self.change)
 
         self.progress = QProgressBar()
+
+        self.info = QLabel("{0} find. {1} select".format(0, 0))
+        self.info.setFont(QFont('Arial', 13))
 
         openDirButton = QPushButton("Open")
         openDirButton.clicked.connect(self.getDirectory)
@@ -36,7 +40,6 @@ class Root(QMainWindow):
         saveOneButton.clicked.connect(lambda: threading.Thread(target=self.download).start())
 
         selectAllButton = QPushButton("Select all")
-        # selectAllButton.clicked.connect(lambda: threading.Thread(target=self.select_all).start())
         selectAllButton.clicked.connect(self.select_all)
 
         removeSelButton = QPushButton("Remove selection")
@@ -53,9 +56,9 @@ class Root(QMainWindow):
         layoutV1.addWidget(reloadMusic)
 
         layoutV2 = QVBoxLayout()
+        layoutV2.addWidget(self.info)
         layoutV2.addWidget(self.music)
         layoutV2.addWidget(self.progress)
-        # layoutV2.addWidget(self.console)
 
         layoutH = QHBoxLayout()
         layoutH.addLayout(layoutV1)
@@ -65,9 +68,6 @@ class Root(QMainWindow):
 
         centerWidget.setLayout(layoutH)
         self.setCentralWidget(centerWidget)
-
-        self.resize(900, 640)
-        self.setWindowTitle("VK music downloader")
 
     def reload_music(self):
         self.to_download.clear()
@@ -115,11 +115,6 @@ class Root(QMainWindow):
             item = self.music.item(i)
             self.music.itemWidget(item).setCheckState(0)
 
-    # def write_to_console(self):
-    #     with open('./log/last_log.txt', 'r') as log:
-    #         cur = log.read()
-    #         self.console.setPlainText(cur)
-
     def get_all_songs(self):
         try:
             dirr = './data/{0}/Normal_Songs'.format(self.user.user_id)
@@ -138,9 +133,14 @@ class Root(QMainWindow):
                 item = QListWidgetItem(self.music)  # ???
                 self.music.addItem(item)
                 self.music.setItemWidget(item, new_song)
+        self.info.setText("{0} find. {1} select".format(len(files), 0))
 
     def change(self, state, song):
         if (state == Qt.Checked) and (song not in self.to_download):
             self.to_download.append(song)
         elif song in self.to_download:
             self.to_download.remove(song)
+        cur = str(self.info.text())
+        ind0 = cur.index('.') + 1
+        ind1 = cur.index(' select')
+        self.info.setText(cur[:ind0:] + str(len(self.to_download)) + cur[ind1::])

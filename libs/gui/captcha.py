@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from urllib.request import urlopen
 import sys
+from tools import resource_path
 
 
 class Captcha(QMainWindow):
@@ -12,6 +13,7 @@ class Captcha(QMainWindow):
 
         self.setWindowTitle("Captcha")
         self.resize(333, 207)
+        self.setWindowIcon(QIcon(resource_path('logo.png')))
 
         self.captcha = QLabel()
         url = captcha.get_url()

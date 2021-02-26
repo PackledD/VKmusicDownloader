@@ -2,6 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import sys
+from tools import resource_path
 
 
 class Two_fact(QMainWindow):
@@ -11,6 +12,7 @@ class Two_fact(QMainWindow):
 
         self.setWindowTitle("Captcha")
         self.resize(333, 150)
+        self.setWindowIcon(QIcon(resource_path('logo.png')))
 
         label = QLabel("Enter two-factor code: ")
         label.setFont(QFont("Arial", 15))
